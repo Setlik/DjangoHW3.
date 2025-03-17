@@ -2,9 +2,15 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 
 from academy.apps import AcademyConfig
-from academy.views import (CourseViewSet, LessonCreateAPIView,
-                           LessonDestroyAPIView, LessonListAPIView,
-                           LessonRetrieveAPIView, LessonUpdateAPIView)
+from academy.views import (
+    CourseViewSet,
+    LessonCreateAPIView,
+    LessonDestroyAPIView,
+    LessonListAPIView,
+    LessonRetrieveAPIView,
+    LessonUpdateAPIView,
+    PaymentListView,
+)
 
 app_name = AcademyConfig.name
 
@@ -23,6 +29,7 @@ urlpatterns = [
         LessonDestroyAPIView.as_view(),
         name="lessons_delete",
     ),
+    path("payments/", PaymentListView.as_view(), name="payment-list"),
 ]
 
 urlpatterns += router.urls

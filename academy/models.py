@@ -37,6 +37,7 @@ class Lesson(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Название курса",
         help_text="Укажите название курса",
+        related_name="lessons",
     )
     description = models.TextField(
         blank=True,
