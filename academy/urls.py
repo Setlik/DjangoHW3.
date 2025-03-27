@@ -5,7 +5,7 @@ from academy.apps import AcademyConfig
 from academy.views import (CourseViewSet, LessonCreateAPIView,
                            LessonDestroyAPIView, LessonListAPIView,
                            LessonRetrieveAPIView, LessonUpdateAPIView,
-                           PaymentListView)
+                           PaymentListView, SubscriptionAPIView)
 
 app_name = AcademyConfig.name
 
@@ -25,6 +25,7 @@ urlpatterns = [
         name="lessons_delete",
     ),
     path("payments/", PaymentListView.as_view(), name="payment-list"),
+    path('subscription/', SubscriptionAPIView.as_view(), name='subscription'),
 ]
 
 urlpatterns += router.urls
