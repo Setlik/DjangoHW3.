@@ -5,7 +5,7 @@ from users.models import Payment, User
 
 
 class Command(BaseCommand):
-    help = "Заполнение таблицы платежей тестовыми данными"
+    """Заполнение таблицы платежей тестовыми данными."""
 
     def handle(self, *args, **kwargs):
         try:
