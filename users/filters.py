@@ -1,8 +1,7 @@
 import django_filters
 
+from academy.models import Course, Lesson
 from users.models import Payment
-
-from .models import Course, Lesson
 
 
 class PaymentFilter(django_filters.FilterSet):

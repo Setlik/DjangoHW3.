@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from academy.models import Course
+
 
 class User(AbstractUser):
 
@@ -74,3 +76,13 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Платеж от {self.user.username} на сумму {self.amount} {self.payment_method}"
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "course")
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"

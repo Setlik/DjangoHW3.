@@ -8,7 +8,6 @@ class IsModer(permissions.BasePermission):
         return request.user.groups.filter(name="moders").exists()
 
 
-
 class IsOwner(permissions.BasePermission):
     """Проверяет, является ли пользователь владельцем."""
 
