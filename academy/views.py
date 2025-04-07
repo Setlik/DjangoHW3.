@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
@@ -9,6 +12,7 @@ from academy.paginations import CustomPagination
 from academy.serializers import (CourseDetailSerializer, CourseSerializer,
                                  LessonSerializer)
 from users.permissions import IsModer, IsOwner
+from users.tasks import send_course_update_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -24,6 +28,11 @@ class CourseViewSet(ModelViewSet):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        if timezone.now() - course.updated_at > timedelta(hours=4):
+            send_course_update_email.delay(course.id)
 
     def get_permissions(self):
         if self.action == "create":
