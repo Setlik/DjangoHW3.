@@ -81,7 +81,7 @@ DATABASES = {
         "NAME": os.getenv("NAME"),
         "USER": os.getenv("USER"),
         "PASSWORD": os.getenv("PASSWORD"),
-        "HOST": os.getenv("HOST"),
+        "HOST": 'db' if os.getenv('DOCKERIZED') else os.getenv("HOST"),
         "PORT": os.getenv("PORT"),
     }
 }
