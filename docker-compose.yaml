@@ -26,6 +26,10 @@ services:
 
   db:
     image: postgres:16
+    environment:
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_DB: ${NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
