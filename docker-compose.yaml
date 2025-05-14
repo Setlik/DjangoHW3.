@@ -34,11 +34,11 @@ services:
   redis:
     image: redis:7
     volumes:
-      - redis_data:/data env_file
+      - redis_data:/data
     env_file:
       - ./.env
 
 volumes:
   postgres_data:
   static_volume:
-  redis_volume:
+  redis_data:
