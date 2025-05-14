@@ -75,7 +75,7 @@ jobs:
 
     - name: Prepare deployment directory
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "mkdir -p ${{ secrets.DEPLOY_DIR }}"
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo mkdir -p ${{ secrets.DEPLOY_DIR }}"
 
     - name: Copy project files to server
       run: |
