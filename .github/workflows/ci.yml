@@ -56,7 +56,6 @@ jobs:
 
   deploy:
     needs: test
-    if: github.ref == 'refs/heads/main'  # Развертываем только из main ветки
     runs-on: ubuntu-latest
     env:
       DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
