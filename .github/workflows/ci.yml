@@ -73,6 +73,10 @@ jobs:
         mkdir -p ~/.ssh
         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
+    - name: Prepare deployment directory
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "mkdir -p ${{ secrets.DEPLOY_DIR }}"
+
     - name: Copy project files to server
       run: |
         rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
