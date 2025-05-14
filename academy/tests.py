@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from academy.models import Course, Lesson
-from users.models import User, Subscription
+from users.models import User
 
 
 class CourseTestCase(APITestCase):
