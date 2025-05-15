@@ -1,16 +1,23 @@
 from datetime import timedelta
 
 from django.utils import timezone
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from academy.models import Course, Lesson
 from academy.paginations import CustomPagination
-from academy.serializers import (CourseDetailSerializer, CourseSerializer,
-                                 LessonSerializer)
+from academy.serializers import (
+    CourseDetailSerializer,
+    CourseSerializer,
+    LessonSerializer,
+)
 from users.permissions import IsModer, IsOwner
 from users.tasks import send_course_update_email
 

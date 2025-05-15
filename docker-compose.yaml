@@ -18,7 +18,7 @@ services:
       context: ./nginx
     ports:
       - "80:80"
-    voLumes:
+    volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/staticfiles
     depends_on:
@@ -26,6 +26,10 @@ services:
 
   db:
     image: postgres:16
+    environment:
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_DB: ${NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
@@ -34,11 +38,11 @@ services:
   redis:
     image: redis:7
     volumes:
-      - redis_data:/data env_file:
+      - redis_data:/data
     env_file:
       - ./.env
 
 volumes:
   postgres_data:
   static_volume:
-  redis_volume:
+  redis_data:
