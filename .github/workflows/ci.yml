@@ -54,91 +54,38 @@ jobs:
       - name: Run tests
         run: python manage.py test
 
-  deploy:
+  build:
     needs: test
     runs-on: ubuntu-latest
-    env:
-      DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
-      SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Log in in Docker hub
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+
+      - name: Push Docker image in Docker hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Validate SSH connection
-        run: ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "echo 'SSH connection successful'"
-
-      - name: Prepare deployment directory
+      - name: Deploy to server
         run: |
-          ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "
-            sudo mkdir -p $DEPLOY_DIR
-            sudo chown -R ${{ secrets.SSH_USER }}: $DEPLOY_DIR
-          "
-
-      - name: Sync project files
-        run: |
-          rsync $SSH_OPTS -avz \
-            --exclude '.git' \
-            --exclude '.github' \
-            --exclude '__pycache__' \
-            --exclude 'venv' \
-            --include='requirements.txt' \
-            --include='manage.py' \
-            --include='*/' \
-            --include='*.py' \
-            --delete \
-            . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
-
-      - name: Install system dependencies
-        run: |
-          ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            set -e
-            sudo apt-get update
-            sudo apt-get install -y python3-venv python3-dev python3-pip
-          EOF
-
-      - name: Setup virtual environment
-        run: |
-          ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            set -e
-            cd $DEPLOY_DIR
-            if [ ! -f "requirements.txt" ]; then
-              echo "Error: requirements.txt not found!"
-              exit 1
-            fi
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install --upgrade pip wheel
-            pip install -r requirements.txt
-          EOF
-
-      - name: Run migrations
-        run: |
-          ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            set -e
-            cd $DEPLOY_DIR
-            source venv/bin/activate
-            python manage.py migrate --noinput
-          EOF
-
-      - name: Collect static files
-        run: |
-          ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            set -e
-            cd $DEPLOY_DIR
-            source venv/bin/activate
-            python manage.py collectstatic --noinput
-          EOF
-
-      - name: Restart application
-        run: |
-          ssh $SSH_OPTS ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            set -e
-            sudo systemctl restart myapp.service
-            echo "Application restarted successfully"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          docker stop myapp || true
+          docker rm myapp || true
+          docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
