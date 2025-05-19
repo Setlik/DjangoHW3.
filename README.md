@@ -9,7 +9,7 @@ Academy — это приложение для онлайн уроков.
 1. Клонируйте репозиторий:
 
 ```
-git clone https://github.com/Setlik/HabitLab.git
+git clone https://github.com/Setlik/DjangoHW3..git
 ```
 
 2. Установите зависимости:
@@ -28,6 +28,12 @@ docker-compose up --build
 
 ```
 docker ps
+```
+
+5.  ip server нашего сервиса:
+
+```
+http://158.160.74.181/
 ```
 
 ## Документация:
