@@ -87,8 +87,7 @@ jobs:
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           docker stop myapp || true
           docker rm myapp || true
-          CONTAINER_PORT=8000
-          HOST_PORT=$(docker run -d -P --name myapp ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }})
-          HOST_PORT=$(docker port myapp $CONTAINER_PORT | awk -F ':' '{print $2}')
-          echo "Контейнер запущен на порту: $HOST_PORT"
+          docker run -d --name myapp -p 80:8000 \
+          -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+          ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
