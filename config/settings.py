@@ -1,20 +1,19 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
-from django.conf.global_settings import STATIC_ROOT
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 INSTALLED_APPS = [
@@ -82,7 +81,7 @@ DATABASES = {
         "NAME": os.getenv("NAME"),
         "USER": os.getenv("USER"),
         "PASSWORD": os.getenv("PASSWORD"),
-        "HOST": 'db' if os.getenv('DOCKERIZED') else os.getenv("HOST"),
+        "HOST": "db" if os.getenv("DOCKERIZED") else os.getenv("HOST"),
         "PORT": os.getenv("PORT"),
     }
 }
@@ -124,9 +123,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = [BASE_DIR / "staticfiles"]
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 MEDIA_URL = "/media/"
@@ -171,3 +172,12 @@ CELERY_TASK_TRACK_STARTED = True
 
 # Максимальное время на выполнение задачи
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test_db.sqlite3",
+        }
+    }

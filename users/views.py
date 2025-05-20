@@ -1,9 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     RetrieveAPIView, UpdateAPIView,
-                                     get_object_or_404)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+    get_object_or_404,
+)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,8 +16,11 @@ from academy.models import Course
 from users.filters import PaymentFilter
 from users.models import Payment, Subscription, User
 from users.serializers import PaymentSerializer, UserSerializer
-from users.services import (create_stripe_product, create_stripe_product_price,
-                            create_stripe_sessions)
+from users.services import (
+    create_stripe_product,
+    create_stripe_product_price,
+    create_stripe_sessions,
+)
 
 
 class UserCreateAPIView(CreateAPIView):

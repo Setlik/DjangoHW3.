@@ -4,6 +4,7 @@ from rest_framework.serializers import ModelSerializer
 
 from academy.models import Course, Lesson
 from academy.validators import validate_youtube_url
+from users.models import Subscription
 
 
 class LessonSerializer(ModelSerializer):

@@ -9,13 +9,19 @@ Academy — это приложение для онлайн уроков.
 1. Клонируйте репозиторий:
 
 ```
-git clone https://github.com/Setlik/HabitLab.git
+git clone https://github.com/Setlik/DjangoHW3..git
 ```
 
 2. Установите зависимости:
 
 ```
 pip install -r requirements.txt
+```
+
+3. Для запуска приложения локально используйте команду:
+
+```
+python manage.py runserver
 ```
 
 3. Для запуска проекта с использованием Docker Compose выполните следующую команду:
@@ -28,6 +34,18 @@ docker-compose up --build
 
 ```
 docker ps
+```
+
+5. Инструкция по настройке сервера и CI/CD:
+
+```
+- Для автоматического деплоя используйте CI/CD систему GitHub Actions.
+```
+
+6.  Адрес сервера с развернутым приложением:
+
+```
+http://158.160.74.181/
 ```
 
 ## Документация:
